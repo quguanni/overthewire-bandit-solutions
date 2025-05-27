@@ -135,10 +135,10 @@ ssh -i key.txt bandit17@bandit.labs.overthewire.org -p 2220
 bandit17: x2gLTTjFwMOhQ8oWNbMN362QKxfRqGlO
 ls -a
 diff passwords.new passwords.old
-< x2gLTTjFwMOhQ8oWNbMN362QKxfRqGlO
----
-> C6XNBdYOkgt5ARXESMKWWOUwBeaIQZ0Y
-grep 'C6XNBdYOkgt5ARXESMKWWOUwBeaIQZ0Y' passwords.old
+we get:
+x2gLTTjFwMOhQ8oWNbMN362QKxfRqGlO
+C6XNBdYOkgt5ARXESMKWWOUwBeaIQZ0Y
+grep 'C6XNBdYOkgt5ARXESMKWWOUwBeaIQZ0Y' passwords.old to see the second password is the old one so the correct password is the first one
 
 
 bandit18: cGWpMaKXVwDUNgPAVJbWYuGHVn9zl3j8
