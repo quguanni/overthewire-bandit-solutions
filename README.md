@@ -1,3 +1,4 @@
+'
 # bandit.labs.overthewire.org
 Tutorial for Bandit.Labs.Overthewire
 
@@ -152,3 +153,105 @@ we get -rwsr-x---  1 bandit20 bandit19 14884 Apr 10 14:23 bandit20-do
 We find that the only file with the s in place of x is the file called bandit20-d0, and this file gives us the user id permission as bandit20
 that means we could use this file to access the locked bandit20 content
 ./bandit20-do cat /etc/bandit_pass/bandit20
+
+bandit 20: EeoULMCra2q0dSkYj561DX7s1CpBuOBt
+This level teaches us how to almost like setting up a real server
+I found using tmux a little frustrating so instead i opened two terminal windows
+first I check what the binary code file is called: ls -al
+I find that it's called suconnect
+In the first one, i have: nc -lvp 40000 (note that this port could be anything as long
+as it's not commonly used for something else, and 40000 is large enough)(listen
+verbose(show connections) port)
+In the second terminal window, i have: ./suconnect 40000
+then i copy and paste the bandit 19 password into the nc, the first terminal window.
+In the second terminal window, it says Read:
+0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO
+Password matches, sending next password
+ Then i received the password in the first terminal window!
+
+
+bandit21: tRae0UfB9v0UzbCdn9cY0gQnds9GF58Q
+
+cd /etc/cron.d/
+ls -al
+cat cronjob_bandit22
+it shows: * * * * * bandit22 /usr/bin/cronjob_bandit22.sh &> /dev/null
+ this means that this script is being ran at every minute of every hour of every day of
+every month
+examples: 0 * * * *: hourly; 0 0 * * *: daily at midnight; 30 9 * * 1: every Monday at
+9:30 am. @ reboot: run once at system reboot
+But i can find the path to the script that is being ran
+So then i just simply cat /usr/bin/cronjob_bandit22.sh to look at the script which i will see 
+#!/bin/bash
+chmod 644 /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+cat /etc/bandit_pass/bandit22 > /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+
+This script means that the file is catted and stored in that temp file and i simply cat that temp file:
+cat /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv and I will get the passkey: tRae0UfB9v0UzbCdn9cY0gQnds9GF58Q
+
+bandit 22: 0Zf11ioIjMVN551jX3CmStKLYqjk54Ga
+
+cd /etc/cron.d
+
+ls -al
+
+cat cronjob_bandit23 
+it shows 
+@reboot bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
+* * * * * bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
+
+cat /usr/bin/cronjob_bandit23.sh
+#!/bin/bash
+myname=$(whoami)
+mytarget=$(echo I am user $myname | md5sum | cut -d ' ' -f 1)
+echo "Copying passwordfile /etc/bandit_pass/$myname to /tmp/$mytarget"
+cat /etc/bandit_pass/$myname > /tmp/$mytarget
+
+(So that means i just need to find what is "I am user bandit23" )
+
+echo I am user bandit23 | md5sum
+8ca319486bfbbc3663ea0fbe81326349
+cat /tmp/8ca319486bfbbc3663ea0fbe81326349
+0Zf11ioIjMVN551jX3CmStKLYqjk54Ga
+
+(So | is interesting because it takes the output of the command on the left of | and use that as the input to the command on the right of |)
+
+bandit23: gb8KRRCsshuZXI0tUuR6ypOFjiZbf3G8
+
+cd /etc/cron.d
+cat cronjob_bandit24
+it shows (
+@reboot bandit24 /usr/bin/cronjob_bandit24.sh &> /dev/null
+* * * * * bandit24 /usr/bin/cronjob_bandit24.sh &> /dev/null
+)
+
+cat /usr/bin/cronjob_bandit24.sh (
+#!/bin/bash
+
+myname=$(whoami)
+
+cd /var/spool/$myname/foo
+echo "Executing and deleting all scripts in /var/spool/$myname/foo:"
+for i in * .*;
+do
+    if [ "$i" != "." -a "$i" != ".." ];
+    then
+        echo "Handling $i"
+        owner="$(stat --format "%U" ./$i)"
+        if [ "${owner}" = "bandit23" ]; then
+            timeout -s 9 60 ./$i
+        fi
+        rm -f ./$i
+    fi
+done
+
+)
+
+cd /var/spool/bandit24/foo
+echo ' cat /etc/bandit_pass24/bandit24 > /tmp/aloha' > aloha.sh && chmod +x aloha.sh
+(then wait a minute)
+cat /tmp/aloha
+gb8KRRCsshuZXI0tUuR6ypOFjiZbf3G8
+
+bandit 25: 
+'
