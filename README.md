@@ -1,257 +1,519 @@
-'
-# bandit.labs.overthewire.org
-Tutorial for Bandit.Labs.Overthewire
+# OverTheWire Bandit — Clean, Fast Solutions (0–34) + Concepts
 
-bandit0: ZjLjTmM6FvvyRnrb2rfNWOZOTa6ip5If
+> Fast, reusable walkthrough emphasizing **commands, concepts, and safe habits**.  
+> **No hard-coded passwords or keys.** Copy/paste friendly and spoiler-minimal.
 
-bandit1: 263JGJPfgU6LtdEvgfWU1XP5yac29mFx: to open the file called - i have to specify the full directory: ./-
+---
 
-bandit2: MNk8KNH3Usiio41PRUEoDFPqfxLPlSmx
-use " " for "spaces in this filename"
+## Table of contents
+- [How to use this guide](#how-to-use-this-guide)
+- [Quick reference (you’ll use these a lot)](#quick-reference-youll-use-these-a-lot)
+- [Levels 0→24](#levels-024)
+  - [0→1](#l0-1) • [1→2](#l1-2) • [2→3](#l2-3) • [3→4](#l3-4) • [4→5](#l4-5) • [5→6](#l5-6) • [6→7](#l6-7) • [7→8](#l7-8) • [8→9](#l8-9) • [9→10](#l9-10) • [10→11](#l10-11) • [11→12](#l11-12) • [12→13](#l12-13) • [13→14](#l13-14) • [14→15](#l14-15) • [15→16](#l15-16) • [16→17](#l16-17) • [17→18](#l17-18) • [18→19](#l18-19) • [19→20](#l19-20) • [20→21](#l20-21) • [21→22](#l21-22) • [22→23](#l22-23) • [23→24](#l23-24)
+- [Levels 24→34](#levels-24-34)
+  - [24→25](#l24-25) • [25→26](#l25-26) • [26→27](#l26-27) • [27→28 (git)](#l27-28) • [28→29 (git history)](#l28-29) • [29→30 (git tags)](#l29-30) • [30→31 (git branches)](#l30-31) • [31→32 (git push hook)](#l31-32) • [32→33 (git policy)](#l32-33) • [33→34](#l33-34)
 
-bandit3: 2WmrDFRmJIq3IPxneAaMGhap0pFhF3NJ
-ls -a to show the hidden files
+---
 
-bandit4: 4oQYVPkxZOOEOO5pTW81FB8j8lxXGUQw
-cat ./-file07 is the file with the password to this level.
-We can do file ./* instead to help find out which one is the file with the ASCII text
+## How to use this guide
+- **Never paste real passwords/keys** into public docs. When you *already* have access, prefer variables like:
+  ```bash
+  PW14=$(cat /etc/bandit_pass/bandit14)
+  ```
+- **Environment**:
+  ```bash
+  export HOST=bandit.labs.overthewire.org
+  export PORT=2220
+  ```
+- **Login template**:
+  ```bash
+  ssh bandit$N@$HOST -p $PORT
+  ```
+- **Helper** (optional):
+  ```bash
+  login(){ ssh bandit$1@$HOST -p $PORT; }
+  ```
+- **Tip**: If SSH acts weird (rare), try:
+  ```bash
+  ssh -o PreferredAuthentications=publickey,password -o PubkeyAuthentication=no …
+  ```
 
-bandit5: HWasnPhtq9AVKe0dmk45nxy20cvUa6EG
-./maybehere07/.file2cd
+---
 
-bandit6: morbNTDkSW6jIlUc0ymOdMaLnOlFVAaj
-using the command: find / -type f -size 33c -user bandit7 -group bandit6 2>/dev/null
-notice 0 = stdin: standard input, 1 = stdout: standard output, 2 = stderr: standard error
-remark: /dev/null is a blackhole
+## Quick reference (you’ll use these a lot)
+- **Quoting**: `"path with spaces"` or `spaces\ in\ this\ filename`
+- **Pipes**: `A | B` sends A’s stdout → B’s stdin
+- **Redirection**: `>` overwrite, `>>` append, `<` stdin from file
+- **Streams**: `0=stdin`, `1=stdout`, `2=stderr` (e.g., `2>/dev/null`)
+- **Search**:
+  - `grep -n PATTERN file`
+  - `find DIR -type f -size 33c -user X -group Y -exec cat {} +`
+- **Inspection/encoding**: `file`, `strings`, `base64 -d`, `tr`
+- **Compression**: `gunzip`, `bunzip2`, `unxz`, `tar -xf`
+- **Net**: `nc -lvp <port>`, `openssl s_client -connect host:port -quiet`
+- **SSH**: `ssh -i key.pem user@host -p 2220` + `chmod 600 key.pem`
 
-bandit7: dfwvzFQi4mU0wfNbFOe9RoWskMLg7eEc
-grep "millionth" data.txt
+---
 
-bandit8: 4CKMh1JI91bUIZZPXDqGanal4xvAg0JM
-sort data.txt | uniq -u
+## Levels 0→24
 
-uniq -d shows only duplicates
-uniq -c shows the count of each line
-uniq -u shows the lines that only appear once
+<a id="l0-1"></a>
+<details><summary><strong>Level 0 → 1</strong> — read <code>readme</code></summary>
 
+**Cmds**
+```bash
+ls -l
+cat readme
+```
+**Concepts**: `ls`, `cat`, relative paths.
+</details>
 
-bandit9: FGUW5ilLVJrxX9kMYMmlN4MgbpfMiqey
-strings data.txt
+<a id="l1-2"></a>
+<details><summary><strong>Level 1 → 2</strong> — filename is <code>-</code></summary>
 
-bandit10: dtR173fZKb0RRsDFSGsg2RWnpNVj3qRr
-base64 -d data.txt
+**Cmds**
+```bash
+cat ./-
+# or
+cat -- -
+```
+**Concepts**: Leading `-` looks like a flag; neutralize with `./` or `--`.
+</details>
 
-bandit11: 7x16WNeHIi5YkIhWsfFIqoognUTyj9Q4
-cat data.txt | tr 'A-Za-z' 'N-ZA-Mn-za-m'
-rotate everything by 13 characters
+<a id="l2-3"></a>
+<details><summary><strong>Level 2 → 3</strong> — spaces in filename</summary>
 
-bandit12: FO5dwFsc0cbaIiH0h8J2eUks2vdTDwAn
-woww that was a lot.
-1. create a temp directory and folder to have all this  happen and play with, mktemp -d
-2. copy the data.txt into the temp directory: cp data.txt /tmp/tmp.nOxexKOMyE
-3. rename it something else:
-mv data.txt layer1
-cp layer1 data.txt
-4. then start to file the files to find out what type file that is: file layer2, which showed that it was an ASCII text
-file data.txt
-5. to remove the hexdump:
-xxd -r data.txt >layer1
-6. file layer1
-which shoes that layer1 is gzip compressed data
+**Cmds**
+```bash
+cat "spaces in this filename"
+# or
+cat spaces\ in\ this\ filename
+```
+**Concepts**: Quoting/escaping.
+</details>
 
-7. mv layer1 layer1.gz
-gunzip layer1.gz
-8. file layer1, shows that the file is gzip 2 compressed data
-9. mv layer1 layer1.gz
-10. gunzip layer1.gz
-11. file layer1, bzip2
-12. mv layer1 layer1.bz2
-13. bunzip2 layer1.bz2
-etc. until we file layer1 and see that itis POSIX tar archieve (GNU)
+<a id="l3-4"></a>
+<details><summary><strong>Level 3 → 4</strong> — hidden file</summary>
 
-14. mv layer1 layer1.tar
-tar -xf layer1.tar
-ls (we find a new file called data5.bin)
-file data5.bin
-mv data5.bin data5.tar
-tar -xf data5.tar
-
-
-bandit 13: MU4VWeTyJk8ROof1qqmcBPaLh7lDCPvS
-This is a fun one and I love it!
-Basically i know where the file is located and i wanna find it but i don't have the access to the file.
-So basically the file is locked for the Bandit14user but i have the private key to become the bandit 14 user.
-ssh bandit14@localhost -i sshkey.private -p 2220
-cat /etc/bandit_pass/bandit14
-
-bandit14: 8xCjnmgoKbGLhHFAZlGE5Tmu4M2tKJQo
-so i need to connect to port 30000
-cat /etc/bandit_pass/bandit14 | nc localhost 30000
-
-
-bandit15: kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx
-echo 8xCjnmgoKbGLhHFAZlGE5Tmu4M2tKJQo |  openssl s_client -connect localhost:30001 -quiet
-
-bandit16:
-nmap -p31000-32000 localhost
-echo 'kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx' | nc localhost 31046
-openssl s_client -connect localhost:31518 -quiet
-echo 'kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx' | nc localhost 31518
-echo 'kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx' | openssl s_client -connect localhost:31518 -quiet
-echo 'kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx' | openssl s_client -connect localhost:31691 -quiet
-echo 'kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx' | openssl s_client -connect localhost:31790 -quiet
-RSA PRIVATE KEY:
------BEGIN RSA PRIVATE KEY-----
-MIIEogIBAAKCAQEAvmOkuifmMg6HL2YPIOjon6iWfbp7c3jx34YkYWqUH57SUdyJ
-imZzeyGC0gtZPGujUSxiJSWI/oTqexh+cAMTSMlOJf7+BrJObArnxd9Y7YT2bRPQ
-Ja6Lzb558YW3FZl87ORiO+rW4LCDCNd2lUvLE/GL2GWyuKN0K5iCd5TbtJzEkQTu
-DSt2mcNn4rhAL+JFr56o4T6z8WWAW18BR6yGrMq7Q/kALHYW3OekePQAzL0VUYbW
-JGTi65CxbCnzc/w4+mqQyvmzpWtMAzJTzAzQxNbkR2MBGySxDLrjg0LWN6sK7wNX
-x0YVztz/zbIkPjfkU1jHS+9EbVNj+D1XFOJuaQIDAQABAoIBABagpxpM1aoLWfvD
-KHcj10nqcoBc4oE11aFYQwik7xfW+24pRNuDE6SFthOar69jp5RlLwD1NhPx3iBl
-J9nOM8OJ0VToum43UOS8YxF8WwhXriYGnc1sskbwpXOUDc9uX4+UESzH22P29ovd
-d8WErY0gPxun8pbJLmxkAtWNhpMvfe0050vk9TL5wqbu9AlbssgTcCXkMQnPw9nC
-YNN6DDP2lbcBrvgT9YCNL6C+ZKufD52yOQ9qOkwFTEQpjtF4uNtJom+asvlpmS8A
-vLY9r60wYSvmZhNqBUrj7lyCtXMIu1kkd4w7F77k+DjHoAXyxcUp1DGL51sOmama
-+TOWWgECgYEA8JtPxP0GRJ+IQkX262jM3dEIkza8ky5moIwUqYdsx0NxHgRRhORT
-8c8hAuRBb2G82so8vUHk/fur85OEfc9TncnCY2crpoqsghifKLxrLgtT+qDpfZnx
-SatLdt8GfQ85yA7hnWWJ2MxF3NaeSDm75Lsm+tBbAiyc9P2jGRNtMSkCgYEAypHd
-HCctNi/FwjulhttFx/rHYKhLidZDFYeiE/v45bN4yFm8x7R/b0iE7KaszX+Exdvt
-SghaTdcG0Knyw1bpJVyusavPzpaJMjdJ6tcFhVAbAjm7enCIvGCSx+X3l5SiWg0A
-R57hJglezIiVjv3aGwHwvlZvtszK6zV6oXFAu0ECgYAbjo46T4hyP5tJi93V5HDi
-Ttiek7xRVxUl+iU7rWkGAXFpMLFteQEsRr7PJ/lemmEY5eTDAFMLy9FL2m9oQWCg
-R8VdwSk8r9FGLS+9aKcV5PI/WEKlwgXinB3OhYimtiG2Cg5JCqIZFHxD6MjEGOiu
-L8ktHMPvodBwNsSBULpG0QKBgBAplTfC1HOnWiMGOU3KPwYWt0O6CdTkmJOmL8Ni
-blh9elyZ9FsGxsgtRBXRsqXuz7wtsQAgLHxbdLq/ZJQ7YfzOKU4ZxEnabvXnvWkU
-YOdjHdSOoKvDQNWu6ucyLRAWFuISeXw9a/9p7ftpxm0TSgyvmfLF2MIAEwyzRqaM
-77pBAoGAMmjmIJdjp+Ez8duyn3ieo36yrttF5NSsJLAbxFpdlc1gvtGCWW+9Cq0b
-dxviW8+TFVEBl1O4f7HVm6EpTscdDxU+bCXWkfjuRb7Dy9GOtt9JPsX8MBTakzh3
-vBgsyi/sN3RqRBcGU40fOoZyfAMT8s1m/uYv52O6IgeuZ/ujbjY=
------END RSA PRIVATE KEY-----
-copy and paste this whole thing into key.txt on the local machine (exit the ssh and save it on the machine as key.txt)
-
-chmod 600 key.txt
-ssh -i key.txt bandit17@bandit.labs.overthewire.org -p 2220
-
-bandit17: x2gLTTjFwMOhQ8oWNbMN362QKxfRqGlO
+**Cmds**
+```bash
+cd inhere
 ls -a
-diff passwords.new passwords.old
-we get:
-x2gLTTjFwMOhQ8oWNbMN362QKxfRqGlO
-C6XNBdYOkgt5ARXESMKWWOUwBeaIQZ0Y
-grep 'C6XNBdYOkgt5ARXESMKWWOUwBeaIQZ0Y' passwords.old to see the second password is the old one so the correct password is the first one
+cat .hidden
+```
+**Concepts**: Dotfiles, `ls -a`.
+</details>
 
+<a id="l4-5"></a>
+<details><summary><strong>Level 4 → 5</strong> — locate the ASCII file</summary>
 
-bandit18: cGWpMaKXVwDUNgPAVJbWYuGHVn9zl3j8
-ssh bandit18@bandit.labs.overthewire.org -p 2220 "cat readme"
+**Cmds**
+```bash
+cd inhere
+file ./* | grep -i "ascii" | cut -d: -f1 | xargs -r cat
+```
+**Concepts**: `file`, pipelines, `xargs`.
+</details>
 
-bandit19: 0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO
+<a id="l5-6"></a>
+<details><summary><strong>Level 5 → 6</strong> — find by constraints</summary>
 
-first log in with the bandit18 passwords, then see what files and what their permissions are:
-ls -al
-we get -rwsr-x---  1 bandit20 bandit19 14884 Apr 10 14:23 bandit20-do                                    
-We find that the only file with the s in place of x is the file called bandit20-d0, and this file gives us the user id permission as bandit20
-that means we could use this file to access the locked bandit20 content
-./bandit20-do cat /etc/bandit_pass/bandit20
+**Cmds**
+```bash
+find . -type f -size 1033c -readable ! -executable -print
+# Then read the printed path:
+cat ./<the_path_you_found>
+```
+**Concepts**: `find` filters (bytes vs. blocks), `! -executable`, `-readable`.
+</details>
 
-bandit 20: EeoULMCra2q0dSkYj561DX7s1CpBuOBt
-This level teaches us how to almost like setting up a real server
-I found using tmux a little frustrating so instead i opened two terminal windows
-first I check what the binary code file is called: ls -al
-I find that it's called suconnect
-In the first one, i have: nc -lvp 40000 (note that this port could be anything as long
-as it's not commonly used for something else, and 40000 is large enough)(listen
-verbose(show connections) port)
-In the second terminal window, i have: ./suconnect 40000
-then i copy and paste the bandit 19 password into the nc, the first terminal window.
-In the second terminal window, it says Read:
-0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO
-Password matches, sending next password
- Then i received the password in the first terminal window!
+<a id="l6-7"></a>
+<details><summary><strong>Level 6 → 7</strong> — search from <code>/</code></summary>
 
+**Cmds**
+```bash
+find / -type f -size 33c -user bandit7 -group bandit6 2>/dev/null -exec cat {} +
+```
+**Concepts**: Absolute search; silence permission errors with `2>/dev/null`.  
+**Streams**: `0=stdin`, `1=stdout`, `2=stderr`. `/dev/null` discards.
+</details>
 
-bandit21: tRae0UfB9v0UzbCdn9cY0gQnds9GF58Q
+<a id="l7-8"></a>
+<details><summary><strong>Level 7 → 8</strong> — grep a specific line</summary>
 
-cd /etc/cron.d/
-ls -al
-cat cronjob_bandit22
-it shows: * * * * * bandit22 /usr/bin/cronjob_bandit22.sh &> /dev/null
- this means that this script is being ran at every minute of every hour of every day of
-every month
-examples: 0 * * * *: hourly; 0 0 * * *: daily at midnight; 30 9 * * 1: every Monday at
-9:30 am. @ reboot: run once at system reboot
-But i can find the path to the script that is being ran
-So then i just simply cat /usr/bin/cronjob_bandit22.sh to look at the script which i will see 
-#!/bin/bash
-chmod 644 /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
-cat /etc/bandit_pass/bandit22 > /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+**Cmds**
+```bash
+grep -n "millionth" data.txt
+```
+**Concepts**: `grep` basics.
+</details>
 
-This script means that the file is catted and stored in that temp file and i simply cat that temp file:
-cat /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv and I will get the passkey: tRae0UfB9v0UzbCdn9cY0gQnds9GF58Q
+<a id="l8-9"></a>
+<details><summary><strong>Level 8 → 9</strong> — unique line</summary>
 
-bandit 22: 0Zf11ioIjMVN551jX3CmStKLYqjk54Ga
+**Cmds**
+```bash
+sort data.txt | uniq -u
+# uniq -d (dups), uniq -c (counts)
+```
+**Concepts**: `sort` + `uniq`.
+</details>
 
-cd /etc/cron.d
+<a id="l9-10"></a>
+<details><summary><strong>Level 9 → 10</strong> — inspect binary-ish data</summary>
 
-ls -al
+**Cmds**
+```bash
+strings data.txt | less
+```
+**Concepts**: `strings` → printable sequences.
+</details>
 
-cat cronjob_bandit23 
-it shows 
-@reboot bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
-* * * * * bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
+<a id="l10-11"></a>
+<details><summary><strong>Level 10 → 11</strong> — base64 decode</summary>
 
-cat /usr/bin/cronjob_bandit23.sh
-#!/bin/bash
-myname=$(whoami)
-mytarget=$(echo I am user $myname | md5sum | cut -d ' ' -f 1)
-echo "Copying passwordfile /etc/bandit_pass/$myname to /tmp/$mytarget"
-cat /etc/bandit_pass/$myname > /tmp/$mytarget
+**Cmds**
+```bash
+base64 -d data.txt
+```
+**Concepts**: Encodings, `-d`.
+</details>
 
-(So that means i just need to find what is "I am user bandit23" )
+<a id="l11-12"></a>
+<details><summary><strong>Level 11 → 12</strong> — ROT13</summary>
 
-echo I am user bandit23 | md5sum
-8ca319486bfbbc3663ea0fbe81326349
-cat /tmp/8ca319486bfbbc3663ea0fbe81326349
-0Zf11ioIjMVN551jX3CmStKLYqjk54Ga
+**Cmds**
+```bash
+tr 'A-Za-z' 'N-ZA-Mn-za-m' < data.txt
+```
+**Concepts**: `tr` maps.
+</details>
 
-(So | is interesting because it takes the output of the command on the left of | and use that as the input to the command on the right of |)
+<a id="l12-13"></a>
+<details><summary><strong>Level 12 → 13</strong> — un-hexdump, decompress iteratively</summary>
 
-bandit23: gb8KRRCsshuZXI0tUuR6ypOFjiZbf3G8
+**Fast path**
+```bash
+mkdir -p "$(mktemp -d)" && cd $_
+cp ~/data.txt .
+xxd -r data.txt > layer
 
-cd /etc/cron.d
-cat cronjob_bandit24
-it shows (
-@reboot bandit24 /usr/bin/cronjob_bandit24.sh &> /dev/null
-* * * * * bandit24 /usr/bin/cronjob_bandit24.sh &> /dev/null
-)
-
-cat /usr/bin/cronjob_bandit24.sh (
-#!/bin/bash
-
-myname=$(whoami)
-
-cd /var/spool/$myname/foo
-echo "Executing and deleting all scripts in /var/spool/$myname/foo:"
-for i in * .*;
-do
-    if [ "$i" != "." -a "$i" != ".." ];
-    then
-        echo "Handling $i"
-        owner="$(stat --format "%U" ./$i)"
-        if [ "${owner}" = "bandit23" ]; then
-            timeout -s 9 60 ./$i
-        fi
-        rm -f ./$i
-    fi
+# Loop until "ASCII text" appears
+while :; do
+  if   file layer | grep -qi 'gzip';  then mv layer layer.gz;  gunzip -f layer.gz;  mv layer layer
+  elif file layer | grep -qi 'bzip2'; then mv layer layer.bz2; bunzip2 -f layer.bz2; mv layer layer
+  elif file layer | grep -qi 'xz';    then mv layer layer.xz;  unxz -f layer.xz;   mv layer layer
+  elif file layer | grep -qi 'tar';   then mv layer layer.tar; mkdir t && tar -xf layer.tar -C t && rm -f layer.tar && mv t/* layer && rmdir t
+  else break; fi
 done
+file layer && cat layer
+```
+**Concepts**: `xxd -r`, compression tools, `file` as a compass.
+</details>
 
-)
+<a id="l13-14"></a>
+<details><summary><strong>Level 13 → 14</strong> — SSH with provided key</summary>
 
+**Cmds**
+```bash
+chmod 600 sshkey.private
+ssh -i sshkey.private bandit14@localhost -p $PORT
+cat /etc/bandit_pass/bandit14
+```
+**Concepts**: SSH identities, strict key perms (`600`).
+</details>
+
+<a id="l14-15"></a>
+<details><summary><strong>Level 14 → 15</strong> — netcat to port 30000</summary>
+
+**Cmds**
+```bash
+PW14=$(cat /etc/bandit_pass/bandit14)
+echo "$PW14" | nc localhost 30000
+```
+**Concepts**: `nc`, pipelines.
+</details>
+
+<a id="l15-16"></a>
+<details><summary><strong>Level 15 → 16</strong> — TLS on 30001</summary>
+
+**Cmds**
+```bash
+PW15=$(cat /etc/bandit_pass/bandit15)
+echo "$PW15" | openssl s_client -connect localhost:30001 -quiet
+```
+**Concepts**: `openssl s_client` (TLS).
+</details>
+
+<a id="l16-17"></a>
+<details><summary><strong>Level 16 → 17</strong> — scan 31000–32000; find TLS that returns an SSH key</summary>
+
+**Cmds**
+```bash
+PW16=$(cat /etc/bandit_pass/bandit16)
+# Get open ports from nmap and probe them:
+for p in $(nmap -p31000-32000 localhost -sT --open -oG - | awk '/open/{print $2}' | sed 's/[^0-9]/ /g'); do
+  echo "$PW16" | openssl s_client -connect localhost:$p -quiet 2>/dev/null
+done
+# Save the PEM block (when you see it) to key.txt, then:
+chmod 600 key.txt
+ssh -i key.txt bandit17@$HOST -p $PORT
+```
+**Concepts**: Port scan → TLS probe; PEM hygiene.  
+**Safety**: Don’t publish the key; store it locally with `600` perms.
+</details>
+
+<a id="l17-18"></a>
+<details><summary><strong>Level 17 → 18</strong> — find the changed line</summary>
+
+**Cmds**
+```bash
+diff passwords.new passwords.old
+# The changed line is the new password
+```
+**Concepts**: Minimal diffs.
+</details>
+
+<a id="l18-19"></a>
+<details><summary><strong>Level 18 → 19</strong> — non-interactive SSH</summary>
+
+**Cmds**
+```bash
+ssh bandit18@$HOST -p $PORT "cat readme"
+```
+**Concepts**: Remote one-off commands via SSH.
+</details>
+
+<a id="l19-20"></a>
+<details><summary><strong>Level 19 → 20</strong> — SUID helper</summary>
+
+**Cmds**
+```bash
+ls -al
+./bandit20-do cat /etc/bandit_pass/bandit20
+```
+**Concepts**: SUID binaries, privilege boundaries.
+</details>
+
+<a id="l20-21"></a>
+<details><summary><strong>Level 20 → 21</strong> — local TCP handshake</summary>
+
+**Cmds**
+```bash
+# Terminal A (listener)
+nc -lvp 40000
+# Terminal B (runner)
+./suconnect 40000
+# Paste bandit20 password into A; response comes back after B validates.
+```
+**Concepts**: Listener vs client; simple handshake.
+</details>
+
+<a id="l21-22"></a>
+<details><summary><strong>Level 21 → 22</strong> — read cron + helper script</summary>
+
+**Cmds**
+```bash
+cd /etc/cron.d
+cat cronjob_bandit22
+cat /usr/bin/cronjob_bandit22.sh
+cat /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+```
+**Concepts**: Cron → script → temp file.
+</details>
+
+<a id="l22-23"></a>
+<details><summary><strong>Level 22 → 23</strong> — md5 of a specific phrase</summary>
+
+**Cmds**
+```bash
+cd /etc/cron.d && cat cronjob_bandit23
+cat /usr/bin/cronjob_bandit23.sh
+echo -n "I am user bandit23" | md5sum | cut -d" " -f1
+cat /tmp/<that_hash>
+```
+**Concepts**: Hash pipelines; exact spacing matters.
+</details>
+
+<a id="l23-24"></a>
+<details><summary><strong>Level 23 → 24</strong> — drop a script into cron spool</summary>
+
+**Cmds**
+```bash
 cd /var/spool/bandit24/foo
-echo ' cat /etc/bandit_pass24/bandit24 > /tmp/aloha' > aloha.sh && chmod +x aloha.sh
-(then wait a minute)
-cat /tmp/aloha
-gb8KRRCsshuZXI0tUuR6ypOFjiZbf3G8
+cat /usr/bin/cronjob_bandit24.sh
 
-bandit 25: 
-'
+# Minimal script to copy the password:
+cat > get24.sh <<'EOF'
+#!/bin/bash
+cat /etc/bandit_pass/bandit24 > /tmp/b24
+EOF
+chmod +x get24.sh
+# Wait up to 60s for cron to run, then:
+cat /tmp/b24
+```
+**Concepts**: Cron exec context, ownership checks, absolute paths.  
+**Fixed pitfall**: Use `/etc/bandit_pass/bandit24` (not `bandit_pass24`).
+</details>
+
+---
+
+## Levels 24–34
+
+> **Git levels** clone pattern:  
+> `git clone ssh://banditNN-git@localhost/home/banditNN-git/repo`  
+> Use the password of **banditNN** when prompted.
+
+<a id="l24-25"></a>
+<details><summary><strong>Level 24 → 25</strong> — brute-force a 4-digit PIN on <code>localhost:30002</code></summary>
+
+**Goal**: Send `<password> <PIN>` on one line.
+
+**Cmds**
+```bash
+PW24=$(cat /etc/bandit_pass/bandit24)
+seq -w 0000 9999 | xargs -I{} echo "$PW24 {}" | nc localhost 30002 | tee out.txt
+grep -v "Wrong!" out.txt
+```
+**Concepts**: Brute forcing with `seq -w`, piping to `nc`, capturing with `tee`.
+</details>
+
+<a id="l25-26"></a>
+<details><summary><strong>Level 25 → 26</strong> — restricted shell via <code>showtext</code>; escape to <code>vim</code></summary>
+
+**Cmds**
+```bash
+chmod 600 bandit26.sshkey
+# Make your terminal small so the pager is interactive:
+ssh -i bandit26.sshkey bandit26@localhost -p $PORT
+# In the pager, press 'v' to open vim, then:
+:e /etc/bandit_pass/bandit26
+# or spawn a shell:
+:set shell=/bin/bash | :shell
+```
+**Concepts**: Pager → `vim` escape; `:e` and `:shell`.
+</details>
+
+<a id="l26-27"></a>
+<details><summary><strong>Level 26 → 27</strong> — SUID helper again</summary>
+
+**Cmds**
+```bash
+ls -al
+./bandit27-do cat /etc/bandit_pass/bandit27
+```
+**Concepts**: SUID execution.
+</details>
+
+<a id="l27-28"></a>
+<details><summary><strong>Level 27 → 28</strong> — Git: clone & read</summary>
+
+**Cmds**
+```bash
+mkdir -p /tmp/b27 && cd /tmp/b27
+git clone ssh://bandit27-git@localhost/home/bandit27-git/repo
+cd repo && ls -la
+cat README
+```
+**Concepts**: SSH remotes, temp workdirs.
+</details>
+
+<a id="l28-29"></a>
+<details><summary><strong>Level 28 → 29</strong> — Git: recover from history</summary>
+
+**Cmds**
+```bash
+mkdir -p /tmp/b28 && cd /tmp/b28
+git clone ssh://bandit28-git@localhost/home/bandit28-git/repo
+cd repo
+git log --oneline --decorate --graph
+git show HEAD~1:README
+# or
+git log -p README
+```
+**Concepts**: `git show <commit>:<path>`, history diffs.
+</details>
+
+<a id="l29-30"></a>
+<details><summary><strong>Level 29 → 30</strong> — Git: annotated tag</summary>
+
+**Cmds**
+```bash
+mkdir -p /tmp/b29 && cd /tmp/b29
+git clone ssh://bandit29-git@localhost/home/bandit29-git/repo
+cd repo
+git tag -n
+git show secret   # if the tag is named 'secret' (check list)
+```
+**Concepts**: Tags carry messages/content.
+</details>
+
+<a id="l30-31"></a>
+<details><summary><strong>Level 30 → 31</strong> — Git: other branch</summary>
+
+**Cmds**
+```bash
+mkdir -p /tmp/b30 && cd /tmp/b30
+git clone ssh://bandit30-git@localhost/home/bandit30-git/repo
+cd repo
+git branch -a
+git checkout origin/dev   # for example
+cat README
+```
+**Concepts**: Remote branches; detached HEAD checkouts.
+</details>
+
+<a id="l31-32"></a>
+<details><summary><strong>Level 31 → 32</strong> — Git: push hook expects a specific file/content</summary>
+
+**Cmds**
+```bash
+mkdir -p /tmp/b31 && cd /tmp/b31
+git clone ssh://bandit31-git@localhost/home/bandit31-git/repo
+cd repo
+echo "May I come in?" > key.txt
+git add key.txt && git commit -m "Add key.txt"
+git push origin master 2>&1 | tee push.out
+grep -iE "pass|password|bandit32" push.out
+```
+**Concepts**: Server-side hooks; capture push output.
+</details>
+
+<a id="l32-33"></a>
+<details><summary><strong>Level 32 → 33</strong> — Git: satisfy policy (branch/message/tag)</summary>
+
+**Cmds (systematic approach)**
+```bash
+mkdir -p /tmp/b32 && cd /tmp/b32
+git clone ssh://bandit32-git@localhost/home/bandit32-git/repo
+cd repo
+cat README  # explains the policy
+
+# Try common policies if terse:
+git checkout -b feature
+echo ok > proof.txt && git add proof.txt && git commit -m "feature: proof"
+git push origin feature 2>&1 | tee push.out
+
+git commit --allow-empty -m "please let me in"
+git push 2>&1 | tee -a push.out
+
+git tag request
+git push origin request 2>&1 | tee -a push.out
+
+grep -iE "pass|password|bandit33" push.out
+```
+**Concepts**: Branch vs tag policies, commit message checks.
+</details>
+
+<a id="l33-34"></a>
+<details><summary><strong>Level 33 → 34</strong> — final note</summary>
+
+**Cmds**
+```bash
+ls -la ~
+# If prior output points to a file, read it:
+# cat /etc/bandit_pass/bandit34
+```
+**Concepts**: Some installs end at 33; others include a final read/ack.
+</details>
+
