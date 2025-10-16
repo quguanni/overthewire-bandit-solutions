@@ -3,6 +3,7 @@
 > Fast, reusable walkthrough emphasizing **commands, concepts, and safe habits**.  
 > **No hard-coded passwords or keys.** Copy/paste friendly and spoiler-minimal.
 
+> **For lawful education only**; do not use against systems you don’t own/operate or have explicit permission to test.
 ---
 
 ## Table of contents
