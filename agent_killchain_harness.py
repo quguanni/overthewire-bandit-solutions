@@ -364,7 +364,6 @@ def print_summary(csvfile: str) -> None:
     print(f"\nTotal trials: {total}, total successes: {succ}")
 
 
-
 if __name__ == "__main__":
     print("Running prompt-injection kill-chain harness...")
     evaluate_all(trials_per_attack=15, seed=42)
