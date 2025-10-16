@@ -363,9 +363,7 @@ def print_summary(csvfile: str) -> None:
         print(f"{d:20} -> overall success rate: {v['successes']/v['trials']:.2f} ({v['successes']}/{v['trials']})")
     print(f"\nTotal trials: {total}, total successes: {succ}")
 
-###########
-# Main
-###########
+
 
 if __name__ == "__main__":
     print("Running prompt-injection kill-chain harness...")
