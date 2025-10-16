@@ -54,6 +54,18 @@
 - **Net**: `nc -lvp <port>`, `openssl s_client -connect host:port -quiet`
 - **SSH**: `ssh -i key.pem user@host -p 2220` + `chmod 600 key.pem`
 
+| Bandit Concept / Level Range            | Core Skill Learned                        | AI Red-Team Analogy                                             |
+| --------------------------------------- | ----------------------------------------- | --------------------------------------------------------------- |
+| **0–5 (File ops, pipes, streams)**      | Shell discipline, safe redirection        | Robust data handling for LLM tool I/O and logging attacks       |
+| **6–11 (Search, encodings)**            | Finding and decoding signals              | Reverse-engineering prompt injections and obfuscated payloads   |
+| **12 (Un-hexdump + multi-compression)** | Multi-layer payload unpacking             | Detecting polyglot prompts and chained encoding attacks         |
+| **14–17 (Network / TLS)**               | Sockets, nmap, openssl                    | Probing agent tool interfaces, finding exfil channels           |
+| **18–20 (SUID / Privilege)**            | Local privilege boundaries                | Sandbox evasion testing for AI agents                           |
+| **21–24 (Cron / automation)**           | Task scheduling, script injection         | Supply-chain timers → automated prompt/data poisoning           |
+| **27–31 (Git history / tags / hooks)**  | Repo forensics & policy bypass            | Data lineage, training set injection, commit-level leak hunting |
+| **32–33 (Git policy enforcement)**      | Constraint fuzzing & policy logic testing | Evaluating model guardrails and policy circumvention paths      |
+| **34 (Final ack)**                      | Clean exit & documentation                | Ethical reporting and artifact publishing for red-team findings |
+
 ---
 
 ## Levels 0→24
