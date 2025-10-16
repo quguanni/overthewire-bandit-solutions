@@ -48,7 +48,7 @@ This project follows semantic versioning (`vMAJOR.MINOR.PATCH`).
 
 ---
 
-## Upcoming (Roadmap)
+## Upcoming / In-progress (Roadmap)
 - `v0.2.0`: Add small Python scripts that simulate agent toolchains (socket servers, log sanitizers).
 - `v0.3.0`: Integrate reproducible attack harnesses for LLM tool-use (prompt-injection kill-chain).
 - `v1.0.0`: Publish full **AI Red-Team Foundations Curriculum** (Unix + Git + Model evals).
